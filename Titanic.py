@@ -144,9 +144,48 @@ print("\nFeature Importance:")
 print(importance_df[["Feature", "Coefficient"]])
 
 
-# Plot
+# Bar chart
 plt.figure(figsize=(8, 5))
 sns.barplot(x="Coefficient", y="Feature", data=importance_df, palette="viridis")
 plt.title("Feature Importance (Logistic Regression Coefficients)")
 plt.tight_layout()
 plt.show()
+
+#Survival Rate by Gender
+sns.countplot(x='Sex', hue='Survived', data=df)
+plt.title("Survival Count by Gender")
+plt.xlabel("Gender")
+plt.ylabel("Count")
+plt.legend(title="Survived", labels=["No", "Yes"])
+plt.tight_layout()
+plt.show()
+
+
+#Survival Rate by Passanger Class
+sns.countplot(x='Pclass', hue='Survived', data=df)
+plt.title("Survival Count by Passenger Class")
+plt.xlabel("Passenger Class")
+plt.ylabel("Count")
+plt.legend(title="Survived", labels=["No", "Yes"])
+plt.tight_layout()
+plt.show()
+
+
+#Age Distribution of Survivors vs non
+sns.histplot(data=df, x='Age', hue='Survived', kde=True, bins=30)
+plt.title("Age Distribution by Survival")
+plt.xlabel("Age")
+plt.ylabel("Count")
+plt.legend(title="Survived", labels=["No", "Yes"])
+plt.tight_layout()
+plt.show()
+
+
+#fare Vs survival
+sns.boxplot(x='Survived', y='Fare', data=df)
+plt.title("Fare Distribution by Survival")
+plt.xlabel("Survived (0 = No, 1 = Yes)")
+plt.ylabel("Fare")
+plt.tight_layout()
+plt.show()
+
