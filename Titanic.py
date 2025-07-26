@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import roc_curve, auc
 
 # Load data
 df = pd.read_csv("train.csv")
@@ -103,3 +104,49 @@ def predict_survival():
 
 # Run the predictor
 predict_survival()
+
+
+# Calculate probabilities for ROC
+y_probs = model.predict_proba(X_test)[:, 1]  # Probability of class 1 (Survived)
+
+# Generate ROC curve values
+fpr, tpr, thresholds = roc_curve(y_test, y_probs)
+roc_auc = auc(fpr, tpr)
+
+# Plot ROC Curve
+plt.figure(figsize=(6, 4))
+plt.plot(fpr, tpr, color='darkorange', lw=2, label=f"ROC Curve (AUC = {roc_auc:.2f})")
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("ROC Curve - Logistic Regression")
+plt.legend(loc="lower right")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Get feature importance (coefficients)
+feature_names = X.columns
+coefficients = model.coef_[0]
+
+# Create a DataFrame of features and their importance
+importance_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Coefficient": coefficients
+})
+
+# Sort by absolute value of coefficients
+importance_df["Abs_Coefficient"] = importance_df["Coefficient"].abs()
+importance_df = importance_df.sort_values(by="Abs_Coefficient", ascending=False)
+
+# Display
+print("\nFeature Importance:")
+print(importance_df[["Feature", "Coefficient"]])
+
+
+# Plot
+plt.figure(figsize=(8, 5))
+sns.barplot(x="Coefficient", y="Feature", data=importance_df, palette="viridis")
+plt.title("Feature Importance (Logistic Regression Coefficients)")
+plt.tight_layout()
+plt.show()
